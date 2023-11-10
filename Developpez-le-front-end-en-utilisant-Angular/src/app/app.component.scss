@@ -1,0 +1,20 @@
+body {
+  display: flex;
+  justify-content: center; /* Center the content horizontally */
+  align-items: center; /* Center the content vertically */
+  height: 100vh; /* Set the height to 100% of the viewport height */
+  margin: 0; /* Remove default body margin */
+}
+
+.chart-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+
+
+
+
+
+

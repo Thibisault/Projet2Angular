@@ -1,0 +1,9 @@
+<div class="legend">
+  <div *ngFor="let slice of pieChartData">
+    <span class="legend-item">
+      <span class="legend-color" [style.backgroundColor]="slice.color"></span>
+      <span class="legend-label">{{ slice.name }}</span>
+      <span class="legend-value">{{ slice.value }}</span>
+    </span>
+  </div>
+</div>
