@@ -23,6 +23,8 @@ export class OlympicComponent implements OnInit {
 
   selectedCountryData: any[] = [];
 
+  selectedCountryName: string = '';
+
   constructor(private http: HttpClient) {}
 
     showLegend = true;
@@ -70,7 +72,7 @@ export class OlympicComponent implements OnInit {
         const totalParticipations = selectedCountry.participations.length;
         const totalMedals = selectedCountry.participations.reduce((total, participation) => total + participation.medalsCount, 0);
         const totalAthletes = selectedCountry.participations.reduce((total, participation) => total + participation.athleteCount, 0);
-
+        this.selectedCountryName = selectedCountry.country;
         this.lineChartData = [
           {
             name: 'Medals',
@@ -89,7 +91,6 @@ export class OlympicComponent implements OnInit {
         ];
 
         this.selectedCountryData = [
-          { label: 'Country', value: selectedCountry.country },
           { label: 'Total Participations', value: totalParticipations },
           { label: 'Total Medals', value: totalMedals },
           { label: 'Total Athletes', value: totalAthletes },
