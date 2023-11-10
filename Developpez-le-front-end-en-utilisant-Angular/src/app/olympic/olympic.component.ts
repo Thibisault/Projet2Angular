@@ -22,6 +22,7 @@ export class OlympicComponent implements OnInit {
   legendCustomSchema: any[] = [];
 
   selectedCountryData: any[] = [];
+  selectedCountryData2: any[] = [];
 
   selectedCountryName: string = '';
 
@@ -43,14 +44,35 @@ export class OlympicComponent implements OnInit {
   console.log('olympicData:', this.olympicData);
   }
 
-  fetchOlympicData() {
-    this.http.get<Olympic[]>('/assets/mock/olympic.json').subscribe((data) => {
+
+
+
+fetchOlympicData() {
+  this.http.get<Olympic[]>('/assets/mock/olympic.json').subscribe((data) => {
     this.olympicData = data;
     console.log('olympicData:', this.olympicData);
     this.pieChartData = this.calculatePieChartData();
     this.lineChartData = this.calculateLineChartData();
- });
-  }
+
+    // Calculate the total number of countries
+    const uniqueCountries = new Set(data.map(olympic => olympic.country));
+    const totalCountries = uniqueCountries.size;
+
+    // Calculate the number of Olympic Games
+    const allYears = data.reduce((years, olympic) => {
+      olympic.participations.forEach(participation => years.add(participation.year));
+      return years;
+    }, new Set());
+    const totalOlympicGames = allYears.size;
+
+    // Store the new data
+    this.selectedCountryData2 = [
+      { label: 'Total Number of Countries', value: totalCountries },
+      { label: 'Number of Olympic Games', value: totalOlympicGames },
+    ];
+  });
+}
+
 
   calculatePieChartData(): any[] {
     const pieChartData: any[] = [];
@@ -63,6 +85,7 @@ export class OlympicComponent implements OnInit {
     }
     return pieChartData;
   }
+
 
   onPieChartSliceSelect(event: any) {
     if (event.name) {

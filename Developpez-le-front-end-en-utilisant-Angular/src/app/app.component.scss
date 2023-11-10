@@ -1,20 +1,15 @@
-body {
+html, body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
   display: flex;
-  justify-content: center; /* Center the content horizontally */
-  align-items: center; /* Center the content vertically */
-  height: 100vh; /* Set the height to 100% of the viewport height */
-  margin: 0; /* Remove default body margin */
+  justify-content: center;
+  align-items: center;
 }
 
-.chart-container {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
+app-root, :host {
+  display: block;
+  height: 100%;
+  width: 100%;
 }
-
-
-
-
-
-
-

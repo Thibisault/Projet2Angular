@@ -1,6 +1,20 @@
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <div class="main-chart-container">
   <div class="chart" *ngIf="!showLineChart">
-    <h2>Medals per country</h2>
+
+    <h2 class="country-name stats-container">Medals per country</h2>
+
+    <div class="data-container">
+
+      <div class="data-box" *ngFor="let data of selectedCountryData2">
+        <div class="stats-item">
+          <p class="stats-title">{{ data.label }}</p>
+          <h3 class="stats-value">{{ data.value }}</h3>
+        </div>
+      </div>
+    </div>
+
     <ngx-charts-pie-chart
       [view]="[600, 400]"
       [results]="pieChartData"
@@ -15,8 +29,17 @@
   <div class="chart-container">
     <div class="chart" *ngIf="showLineChart">
 
-      <h2 class="country-name stats-container">{{ selectedCountryName }}'s Olympic Performance</h2>
+      <div class="header-container">
+        <div class="button-container">
+          <button (click)="toggleLineChart()">Retour</button>
+        </div>
+        <h2 class="country-name stats-container">{{ selectedCountryName }}'s Olympic Performance</h2>
+        <div class="spacer"></div>
+      </div>
+
+
       <div class="data-container">
+
         <div class="data-box" *ngFor="let data of selectedCountryData">
           <div class="stats-item">
             <p class="stats-title">{{ data.label }}</p>
@@ -35,7 +58,8 @@
         [showYAxisLabel]="true"
       >
       </ngx-charts-line-chart>
-      <button (click)="toggleLineChart()">Cancel</button>
+      <h2 class="alignCenterText">Dates</h2>
+
     </div>
   </div>
 </div>
