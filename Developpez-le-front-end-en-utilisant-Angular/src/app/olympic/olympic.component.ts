@@ -6,7 +6,6 @@ import { Olympic } from 'src/app/core/models/Olympic';
 import { ChartistModule } from "ng-chartist";
 import * as d3 from 'd3';
 
-
 @Component({
   selector: 'app-olympic',
   templateUrl: './olympic.component.html',
@@ -26,7 +25,15 @@ export class OlympicComponent implements OnInit {
 
   selectedCountryName: string = '';
 
-  constructor(private http: HttpClient) {}
+  view: [number, number] = [0,0];
+
+  constructor(private http: HttpClient) {
+  this.view = [innerWidth / 2.3 , 400];}
+
+
+  onResize(event : any) {
+      this.view = [event.target.innerWidth / 2.3, 400];
+  }
 
     showLegend = true;
     toggleLegend() {
@@ -43,9 +50,6 @@ export class OlympicComponent implements OnInit {
   this.fetchOlympicData();
   console.log('olympicData:', this.olympicData);
   }
-
-
-
 
 fetchOlympicData() {
   this.http.get<Olympic[]>('/assets/mock/olympic.json').subscribe((data) => {

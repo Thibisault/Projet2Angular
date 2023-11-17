@@ -9,49 +9,41 @@ body {
 
 .header-container {
   display: flex;
-  justify-content: space-between; /* Aligns items with space between */
+  justify-content: space-between;
   align-items: center;
   width: 100%;
 }
 :host {
-  display: block; // or 'flex' if you want to use flexbox inside the component
-  margin: auto; // Auto margins can help center block elements
-  max-width: 100%; // Prevent the component from overflowing the screen width
-  box-sizing: border-box; // Include padding and borders in the element's total width and height
+  display: flex;
+  margin: auto;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
-// Responsive adjustments
 @media (max-width: 768px) {
   :host {
-    padding: 10px; // Add padding on smaller screens if necessary
+    padding: 10px;
   }
 }
 
-.main-chart-container, .chart-container {
+.main-chart-container, .chart {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  width: 100%;
-  height: 100%;
 }
 
 .main-chart-container {
   width: 100%;
-  max-width: 1024px;
-  margin: 20px auto;
-  padding: 20px;
   background-color: #fff;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 
   @media (max-width: 768px) {
-    max-width: 90%; // Adjust for smaller screens
-    padding: 10px;  // Reduce padding for smaller screens
+    max-width: 90%;
+    padding: 10px;
   }
 }
 
 .chart {
-  margin-bottom: 20px;
 }
 
 .data-container {
@@ -121,39 +113,39 @@ h3 {
 }
 
 .country-name {
-  flex-grow: 0; /* Allows the title to grow and take available space */
-  text-align: center; /* Centers the title text */
+  flex-grow: 0;
+  text-align: center;
     margin-bottom : 10px;
 
 }
 .button-container {
-    flex-grow: 0; /* Do not allow the button container to grow */
-  text-align: left; /* Centers the title text */
+    flex-grow: 0;
+  text-align: left;
   margin-bottom : 15px;
 
 }
 
 .spacer {
-  flex-grow: 0; /* Do not allow the spacer to grow, it's just a dummy element */
+  flex-grow: 0;
 }
 
 button {
-  background-color: #000000; /* Set the background color to black */
-  color: #ffffff; /* Set the text color to white for contrast */
-  border: none; /* Remove the default border */
-  padding: 10px 20px; /* Add some padding */
-  margin-top: 20px; /* Add margin on top to separate it from the chart */
-  cursor: pointer; /* Change cursor to pointer to indicate it's clickable */
-  border-radius: 5px; /* Optional: if you want rounded corners */
-  font-weight: bold; /* Optional: if you want the text to be bold */
-  transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+  background-color: #000000;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  margin-top: 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: darken(#000000, 10%); /* Darken the button on hover */
+    background-color: darken(#000000, 10%);
   }
 
   &:focus {
-    outline: none; /* Remove the default focus outline */
+    outline: none;
   }
 }
 

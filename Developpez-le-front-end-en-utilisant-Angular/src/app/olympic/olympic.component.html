@@ -14,9 +14,9 @@
         </div>
       </div>
     </div>
-
     <ngx-charts-pie-chart
-      [view]="[600, 400]"
+      (window:resize)="onResize($event)"
+      [view]="view"
       [results]="pieChartData"
       [legend]="showLegend"
       [explodeSlices]="false"
@@ -48,8 +48,10 @@
         </div>
       </div>
 
+
       <ngx-charts-line-chart
-        [view]="[700, 400]"
+        (window:resize)="onResize($event)"
+        [view]="view"
         [results]="lineChartData"
         [xAxis]="true"
         [yAxis]="true"
