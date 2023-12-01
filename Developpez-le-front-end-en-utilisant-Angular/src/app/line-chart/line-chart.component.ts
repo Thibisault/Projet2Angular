@@ -23,17 +23,11 @@ export class LineChartComponent implements OnInit, OnDestroy{
       lineChartData: LineChartData[] = [];
       view: [number, number] = [0, 0];
 
-      totalParticipations: number = 0;
-      totalMedals: number = 0;
-      totalAthletes: number = 0;
-
       selectedCountryName: string = '';
       countryName: string = '';
       selectedCountryData: SelectedCountryData2[] = [];
 
       private subscriptions: any[] = []; // Stocker les abonnements aux observables
-      private ngUnsubscribe = new Subject(); // Verifier que les abonnements ont été détruits
-
 
       constructor(
         private http: HttpClient,
@@ -98,7 +92,6 @@ ngOnInit(): void {
       }
       return this.http.get<Olympic[]>('/assets/mock/olympic.json');
     }),
-    takeUntil(this.ngUnsubscribe) // Utiliser takeUntil pour désabonner lorsque ngUnsubscribe est déclenché
   ).subscribe(data => {
     this.olympicData = data;
 
@@ -116,299 +109,56 @@ ngOnInit(): void {
 
 calculateLineChartData(formattedData: any[]): void {
   this.lineChartData = [];
-  const routeSubscriptionCalculateLineChartData = this.route.paramMap.pipe(
-    switchMap(params => {
-      const countryName = params.get('countryName');
-      if (countryName !== null) {
-        this.countryName = countryName;
-      }
-      const selectedCountry = this.olympicData.find(country => country.country === this.countryName);
 
-      if (selectedCountry) {
-        formattedData.forEach(dataItem => {
-          const year = dataItem.year.toString();
-          const yearParticipation = selectedCountry.participations.find(participation => participation.year === Number(year));
+  const years = formattedData.map(dataItem => dataItem.year.toString());
 
-          if (yearParticipation) {
-            this.totalMedals = yearParticipation.medalsCount;
-            this.totalAthletes = yearParticipation.athleteCount;
-            this.totalParticipations = 1;
+  const totalMedalsSeries = {
+    name: `Medals Total`,
+    series: years.map(year => ({
+      name: year,
+      value: formattedData.find(dataItem => dataItem.year.toString() === year)?.[this.countryName]?.totalMedals || 0,
+      label: `${year}: ${formattedData.find(dataItem => dataItem.year.toString() === year)?.[this.countryName]?.totalMedals || 0} Total Medals`,
+    })),
+  };
 
-            this.selectedCountryData = [
-              { label: 'Participations', value: "3" },
-              { label: 'Total Medals', value: this.totalMedals },
-              { label: 'Total Athletes', value: this.totalAthletes }
-            ];
+  const totalAthletesSeries = {
+    name: `Athletes Total`,
+    series: years.map(year => ({
+      name: year,
+      value: formattedData.find(dataItem => dataItem.year.toString() === year)?.[this.countryName]?.totalAthletes || 0,
+      label: `${year}: ${formattedData.find(dataItem => dataItem.year.toString() === year)?.[this.countryName]?.totalAthletes || 0} Total Athletes`,
+    })),
+  };
 
-            this.lineChartData.push({
-              name: `${this.countryName} Total Medals`,
-              series: [
-                {
-                  name: year,
-                  value: this.totalMedals,
-                  label: `${year}: ${this.totalMedals} Total Medals`,
-                },
-              ],
-            });
+  const totalParticipationsSeries = {
+    name: `Participations Total`,
+    series: years.map(year => ({
+      name: year,
+      value: formattedData.find(dataItem => dataItem.year.toString() === year)?.[this.countryName]?.totalParticipations || 0,
+      label: `${year}: ${formattedData.find(dataItem => dataItem.year.toString() === year)?.[this.countryName]?.totalParticipations || 0} Total Participations`,
+    })),
+  };
 
-            this.lineChartData.push({
-              name: `${this.countryName} Total Athletes`,
-              series: [
-                {
-                  name: year,
-                  value: this.totalAthletes,
-                  label: `${year}: ${this.totalAthletes} Total Athletes`,
-                },
-              ],
-            });
+  const totalParticipations = totalParticipationsSeries.series.reduce((total, series) => total + series.value, 0);
+  const totalMedals = totalMedalsSeries.series.reduce((total, series) => total + series.value, 0);
+  const totalAthletes = totalAthletesSeries.series.reduce((total, series) => total + series.value, 0);
 
-            this.lineChartData.push({
-              name: `${this.countryName} Total Participations`,
-              series: [
-                {
-                  name: year,
-                  value: this.totalParticipations,
-                  label: `${year}: ${this.totalParticipations} Total Participations`,
-                },
-              ],
-            });
-          }
-        });
-      }
-      return []; // Return an empty array here or modify as needed
-    }),
-    takeUntil(this.ngUnsubscribe) // Utiliser takeUntil pour désabonner lorsque ngUnsubscribe est déclenché
-  );
+  this.selectedCountryData = [
+    { label: 'Total Participations', value: totalParticipations },
+    { label: 'Total Medals', value: totalMedals },
+    { label: 'Total Athletes', value: totalAthletes },
+  ];
 
-  console.log('Avant ajout de l\'abonnement CalculateLineChart:', this.subscriptions);
-  this.subscriptions.push(routeSubscriptionCalculateLineChartData); // Ajouter l'abonnement à la liste des abonnements
-  console.log('Après ajout de l\'abonnement CalculateLineChart:', this.subscriptions);
+  this.lineChartData.push(totalMedalsSeries, totalAthletesSeries, totalParticipationsSeries);
 }
 
-
 ngOnDestroy(): void {
-  // Trigger the ngUnsubscribe subject to unsubscribe from all observables
-  this.ngUnsubscribe.next();
-  this.ngUnsubscribe.complete();
-  // Display the contents of subscriptions before destruction
-  console.log('Before destruction:', this.subscriptions);
-
+  console.log('Avant destruction:', this.subscriptions);
   this.subscriptions.forEach(subscription => {
     if (subscription) {
       subscription.unsubscribe();
+      console.log('Après destruction:', this.subscriptions);
     }
   });
 }
-
-
 }
-
-
-
-
-// Qui corresopnd au de l'id le plus élevée pour le pays et tout ça qui sera affiché en fonction de l'année.
-
-
-
-/*
-  olympicData: any[] = [];
-  lineChartData: any[] = [];
-  view: [number, number] = [0, 0];
-
-  totalParticipations: number = 0;
-  totalMedals: number = 0;
-  totalAthletes: number = 0;
-
-  selectedCountryName: string = '';
-  selectedCountryData: any[] = [];
-
-  constructor(
-    private http: HttpClient,
-    private route: ActivatedRoute,
-    private router: Router
-  ) {
-    this.view = [innerWidth / 2.3, 400];
-  }
-
-  onResize(event: any) {
-    this.view = [event.target.innerWidth / 2.3, 400];
-  }
-
-  toggleLineChart() {
-  this.router.navigate(['/olympics']);
-  }
-
-  ngOnInit(): void {
-    // Utilisez le service HTTP pour récupérer les données olympiques.
-    this.http.get<Olympic[]>('/assets/mock/olympic.json').subscribe(data => {
-      this.olympicData = data;
-
-      console.log(data)
-      console.log(this.olympicData)
-
-      // Vous pouvez maintenant traiter les données ici.
-      this.calculateLineChartData();
-    });
-
-    // Récupérez les paramètres de l'URL pour le nom du pays.
-    this.route.paramMap.subscribe(params => {
-      const countryName = params.get('countryName');
-      if (countryName) {
-        // Utilisez le nom du pays pour rechercher les données correspondantes dans "this.olympicData".
-        const countryData = this.olympicData.find(dataItem => dataItem.countryName === countryName);
-
-        if (countryData) {
-          this.selectedCountryName = countryData.countryName;
-          this.totalParticipations = countryData.totalParticipations;
-          this.totalMedals = countryData.totalMedals;
-          this.totalAthletes = countryData.totalAthletes;
-
-          this.selectedCountryData = [
-            { label: 'Participations', value: this.totalParticipations },
-            { label: 'Total Medals', value: this.totalMedals },
-            { label: 'Total Athletes', value: this.totalAthletes }
-          ];
-
-          // Mettez à jour les données du graphique à lignes.
-          this.calculateLineChartData();
-        } else {
-          console.log('Les données pour le pays sélectionné n\'ont pas été trouvées.');
-        }
-      }
-    });
-  }
-
-  calculateLineChartData(): void {
-
-    this.lineChartData = [
-      {
-        name: `${this.selectedCountryName} Participations`,
-        series: [
-          {
-            name: 'Total',
-            value: this.totalParticipations,
-            label: `Total: ${this.totalParticipations}`,
-          },
-        ],
-      },
-      {
-        name: `${this.selectedCountryName} Total Medals`,
-        series: [
-          {
-            name: 'Total',
-            value: this.totalMedals,
-            label: `Total: ${this.totalMedals}`,
-          },
-        ],
-      },
-      {
-        name: `${this.selectedCountryName} Total Athletes`,
-        series: [
-          {
-            name: 'Total',
-            value: this.totalAthletes,
-            label: `Total: ${this.totalAthletes}`,
-          },
-        ],
-      }
-    ];
-  }
-}
-
-
-/*
-
-calculateLineChartData(): any[] {
-    const lineChartData: any[] = [];
-
-  lineChartData.push(
-    {
-      name: `${this.selectedCountryName} Participations`,
-      series: [
-        {
-          name: 'Total',
-          value: this.totalParticipations,
-          label: `Total: ${this.totalParticipations}`,
-        },
-      ],
-    },
-    {
-      name: `${this.selectedCountryName} Total Medals`,
-      series: [
-        {
-          name: 'Total',
-          value: this.totalMedals,
-          label: `Total: ${this.totalMedals}`,
-        },
-      ],
-    },
-    {
-      name: `${this.selectedCountryName} Total Athletes`,
-      series: [
-        {
-          name: 'Total',
-          value: this.totalAthletes,
-          label: `Total: ${this.totalAthletes}`,
-        },
-      ],
-    }
-  );
-  return lineChartData;
-}
-
-
-/*
-calculateLineChartData(): any[] {
-    const lineChartData: any[] = [];
-
-    if (this.olympicData && this.olympicData.length > 0) {
-        const seriesData = this.olympicData.map((dataItem: any) => {
-        return {
-        name: dataItem.year.toString(),
-        value: dataItem.medalsCount,
-        label: `${dataItem.year.toString()}: ${dataItem.medalsCount} Medals`,
-      };
-    });
-
-    const totalParticipation = seriesData.reduce((total: number, data: any) => total + data.value, 0);
-    const totalMedals = this.olympicData.reduce((total: number, dataItem: any) => total + dataItem.medalsCount, 0);
-    const totalAthletes = this.olympicData.reduce((total: number, dataItem: any) => total + dataItem.athleteCount, 0);
-
-    lineChartData.push(
-      {
-        name: `${this.selectedCountryName} Participations`,
-        series: [
-          {
-            name: 'Total',
-            value: totalParticipation,
-            label: `Total: ${totalParticipation}`,
-          },
-        ],
-      },
-      {
-        name: `${this.selectedCountryName} Total Medals`,
-        series: [
-          {
-            name: 'Total',
-            value: totalMedals,
-            label: `Total: ${totalMedals}`,
-          },
-        ],
-      },
-      {
-        name: `${this.selectedCountryName} Total Athletes`,
-        series: [
-          {
-            name: 'Total',
-            value: totalAthletes,
-            label: `Total: ${totalAthletes}`,
-          },
-        ],
-      }
-    );
-
-  }
-  return lineChartData;
-}
-*/
-

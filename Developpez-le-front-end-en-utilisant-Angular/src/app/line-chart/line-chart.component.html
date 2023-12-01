@@ -2,13 +2,14 @@
 
 
 <div class="main-chart-container">
-  <div class="header-container">
+  <div class="main-chart-container">
     <div class="header-container">
-      <button (click)="toggleLineChart()">Retour </button>
+
+      <h2 class="country-name stats-container"> <button (click)="toggleLineChart()" class="center-button">Retour</button> {{ countryName }}'s Olympic Performance</h2>
     </div>
-    <h2 class="country-name stats-container ">{{ countryName }}'s Olympic Performance</h2>
     <div class="spacer"></div>
   </div>
+
 
   <div class="data-container">
     <div class="data-box" *ngFor="let data of selectedCountryData">
