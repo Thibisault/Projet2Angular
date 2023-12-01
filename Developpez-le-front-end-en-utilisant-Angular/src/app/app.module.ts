@@ -10,7 +10,7 @@ import { OlympicComponent } from './olympic/olympic.component';
 import { ChartistModule } from "ng-chartist";
 import { NgxChartsModule }from '@swimlane/ngx-charts';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { PieChartLegendComponent } from './pie-chart-legend/pie-chart-legend.component';
+import { LineChartComponent } from './line-chart/line-chart.component';
 
 
 
@@ -20,7 +20,7 @@ import { PieChartLegendComponent } from './pie-chart-legend/pie-chart-legend.com
     HomeComponent,
     NotFoundComponent,
     OlympicComponent,
-    PieChartLegendComponent
+    LineChartComponent
 
   ],
   imports: [BrowserModule, AppRoutingModule, HttpClientModule, ChartistModule, NgxChartsModule, BrowserAnimationsModule,],

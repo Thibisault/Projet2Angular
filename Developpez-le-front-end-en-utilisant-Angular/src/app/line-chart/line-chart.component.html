@@ -1,0 +1,35 @@
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<div class="main-chart-container">
+  <div class="header-container">
+    <div class="header-container">
+      <button (click)="toggleLineChart()">Retour </button>
+    </div>
+    <h2 class="country-name stats-container ">{{ countryName }}'s Olympic Performance</h2>
+    <div class="spacer"></div>
+  </div>
+
+  <div class="data-container">
+    <div class="data-box" *ngFor="let data of selectedCountryData">
+      <div class="stats-item">
+        <p class="stats-title">{{ data.label }}</p>
+        <h3 class="stats-value">{{ data.value }}</h3>
+      </div>
+    </div>
+  </div>
+
+  <ngx-charts-line-chart
+    (window:resize)="onResize($event)"
+    [view]="view"
+    [results]="lineChartData"
+    [xAxis]="true"
+    [yAxis]="true"
+    [legend]="true"
+    [showXAxisLabel]="true"
+    [showYAxisLabel]="true"
+  >
+  </ngx-charts-line-chart>
+  <h2 class="alignCenterText">Dates</h2>
+
+</div>
