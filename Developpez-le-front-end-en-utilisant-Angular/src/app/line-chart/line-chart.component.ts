@@ -100,9 +100,7 @@ ngOnInit(): void {
     this.calculateLineChartData(formattedData);
   });
 
-  console.log('Avant ajout de l\'abonnement ngOnInit:', this.subscriptions);
   this.subscriptions.push(routeSubscriptionNgOnInit); // ajouter l'abonnement à la liste des abonnements
-  console.log('Après ajout de l\'abonnement ngOnInit:', this.subscriptions);
 }
 
 
@@ -153,12 +151,11 @@ calculateLineChartData(formattedData: any[]): void {
 }
 
 ngOnDestroy(): void {
-  console.log('Avant destruction:', this.subscriptions);
   this.subscriptions.forEach(subscription => {
     if (subscription) {
       subscription.unsubscribe();
-      console.log('Après destruction:', this.subscriptions);
     }
   });
 }
+
 }

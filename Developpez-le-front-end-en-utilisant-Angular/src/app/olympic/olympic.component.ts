@@ -77,7 +77,7 @@ export class OlympicComponent implements OnInit, OnDestroy {
 
   fetchOlympicData() {
     this.handler = this.observable.subscribe(this.observer);
-  }
+}
 
   calculatePieChartData(): any[] {
     const pieChartData: any[] = [];
@@ -111,6 +111,7 @@ export class OlympicComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.handler.unsubscribe();
-  }
+   this.handler.unsubscribe();
+}
+
 }

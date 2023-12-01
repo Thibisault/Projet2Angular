@@ -14,6 +14,7 @@ const routes: Routes = [
     path: 'olympics',
     component: OlympicComponent,
   },
+
   {
   path: 'line-chart/:countryName', component: LineChartComponent
   },
